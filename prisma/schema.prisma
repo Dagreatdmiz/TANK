@@ -1,0 +1,153 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+
+enum UserRole { OWNER MANAGER CASHIER }
+enum UserStatus { ACTIVE INACTIVE }
+enum Plan { FREE PREMIUM }
+enum SubscriptionStatus { ACTIVE EXPIRED PENDING FAILED REVERSED }
+enum PaymentStatus { PENDING SUCCESSFUL FAILED REVERSED }
+
+model Business {
+  id String @id @default(cuid())
+  name String
+  ownerName String
+  email String
+  phone String?
+  address String?
+  currency String @default("NGN")
+  logoUrl String?
+  timezone String @default("Africa/Lagos")
+  receiptMessage String @default("Thank you for shopping with us!")
+  printerWidth Int @default(80)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users User[]
+  products Product[]
+  sales Sale[]
+  subscriptions Subscription[]
+  payments Payment[]
+  auditLogs AuditLog[]
+  settings Settings?
+}
+
+model User {
+  id String @id @default(cuid())
+  businessId String
+  name String
+  email String?
+  cashierCode String?
+  passwordHash String
+  role UserRole @default(CASHIER)
+  status UserStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  sales Sale[]
+  auditLogs AuditLog[]
+  @@unique([businessId, cashierCode])
+  @@index([businessId, role])
+}
+
+model Product {
+  id String @id @default(cuid())
+  businessId String
+  name String
+  sku String
+  category String?
+  barcode String?
+  costPrice Decimal @db.Decimal(14, 2)
+  sellingPrice Decimal @db.Decimal(14, 2)
+  stockQty Decimal @default(0) @db.Decimal(14, 3)
+  lowStockThreshold Decimal @default(0) @db.Decimal(14, 3)
+  imageUrl String?
+  status UserStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  saleItems SaleItem[]
+  @@unique([businessId, sku])
+  @@unique([businessId, barcode])
+  @@index([businessId, name])
+}
+
+model Sale {
+  id String @id @default(cuid())
+  businessId String
+  cashierId String
+  receiptNo String
+  subtotal Decimal @db.Decimal(14, 2)
+  discount Decimal @default(0) @db.Decimal(14, 2)
+  total Decimal @db.Decimal(14, 2)
+  costTotal Decimal @db.Decimal(14, 2)
+  grossProfit Decimal @db.Decimal(14, 2)
+  paymentMethod String
+  createdAt DateTime @default(now())
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  cashier User @relation(fields: [cashierId], references: [id])
+  items SaleItem[]
+  @@unique([businessId, receiptNo])
+  @@index([businessId, createdAt])
+  @@index([cashierId, createdAt])
+}
+
+model SaleItem {
+  id String @id @default(cuid())
+  saleId String
+  productId String
+  productNameSnapshot String
+  quantity Decimal @db.Decimal(14, 3)
+  costPriceSnapshot Decimal @db.Decimal(14, 2)
+  sellingPriceSnapshot Decimal @db.Decimal(14, 2)
+  lineTotal Decimal @db.Decimal(14, 2)
+  sale Sale @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Subscription {
+  id String @id @default(cuid())
+  businessId String
+  plan Plan
+  amount Decimal @db.Decimal(14, 2)
+  currency String
+  startAt DateTime?
+  expiryAt DateTime?
+  status SubscriptionStatus @default(PENDING)
+  paymentReference String?
+  createdAt DateTime @default(now())
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  @@index([businessId, status])
+}
+
+model Payment {
+  id String @id @default(cuid())
+  businessId String
+  provider String
+  amount Decimal @db.Decimal(14, 2)
+  currency String
+  status PaymentStatus @default(PENDING)
+  reference String @unique
+  createdAt DateTime @default(now())
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+  businessId String
+  actorId String?
+  action String
+  entity String
+  entityId String?
+  metadata Json?
+  createdAt DateTime @default(now())
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  actor User? @relation(fields: [actorId], references: [id])
+  @@index([businessId, createdAt])
+}
+
+model Settings {
+  businessId String @id
+  receiptMessage String?
+  printerWidth Int @default(80)
+  paymentMethods Json?
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
