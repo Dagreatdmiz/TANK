@@ -1,26 +1,48 @@
 {
-  "name": "tank",
+  "name": "tank-pos-system",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
+  "description": "TANK — Simple cloud-based sales, inventory and POS system for supermarkets",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:frontend": "vite",
+    "dev:backend": "tsx watch src/server.ts",
     "build": "vite build",
+    "build:backend": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@fastify/helmet": "^13.0.1",
+    "@fastify/jwt": "^9.0.1",
+    "@fastify/rate-limit": "^10.1.0",
+    "@prisma/client": "^6.10.0",
+    "bcryptjs": "^3.0.2",
     "canvas-confetti": "^1.9.4",
+    "fastify": "^5.4.0",
     "html5-qrcode": "^2.3.8",
     "lucide-react": "^1.31.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
+    "@types/node": "^22.15.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
     "oxlint": "^1.75.0",
-    "vite": "^8.2.0"
+    "prisma": "^6.10.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vite": "^8.2.0",
+    "vitest": "^3.1.3"
   }
 }

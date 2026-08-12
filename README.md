@@ -1,12 +1,13 @@
-# TANK — POS & Retail Inventory MVP
+# TANK — Cloud-Based POS, Sales & Inventory System
 
 > **Simple sales. Clear records. Better control.**  
-> A modern, cloud-based sales, point-of-sale (POS), inventory, and business-record management system designed specifically for supermarkets, retail shops, and service businesses.
+> A complete, modern cloud-based sales, point-of-sale (POS), inventory, and business-record management system designed specifically for supermarkets, retail shops, and service businesses.
 
 ---
 
 ## 🚀 Key Features
 
+### 💻 Frontend (React + Vite + POS System)
 - **⚡ Fast Point of Sale (POS)**:
   - **Long Search Bar** with integrated **Camera QR/Barcode Scanner Button** on the left side.
   - Interactive product catalog grid with stock indicators and one-click add to cart.
@@ -34,35 +35,51 @@
   - Free Starter Plan (up to 30 products).
   - Premium Plan (₦80,000 / 360 days, unlimited products, 10 cashiers, cloud sync).
 
+### ⚙️ Backend (Fastify + Prisma + PostgreSQL)
+- **Database Models**: Business, User, Cashier, Product, Sale, SaleItem, Subscription, Payment, AuditLog, Settings.
+- **Auth & Roles**: JWT Bearer auth, bcrypt password hashing, Role-based permissions (`OWNER`, `MANAGER`, `CASHIER`).
+- **REST Endpoints**:
+  - `POST /auth/register`, `POST /auth/login`
+  - `GET /products`, `POST /products`, `PATCH /products/:id`, `DELETE /products/:id` (Free 30-product enforcement)
+  - `POST /sales`, `GET /sales`, `GET /sales/:id/receipt`
+  - `GET /reports/summary`, `GET /dashboard` (Gross profit calculations)
+  - `POST /subscription/activate` (360 days premium activation)
+
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, Vite
-- **Styling**: Vanilla CSS Design System with custom tokens, glassmorphism, responsive POS grid, and print media rules.
-- **Icons**: Lucide React
-- **Scanning**: `html5-qrcode`
-- **FX**: Web Audio API Sound Synthesizer, Canvas Confetti
+- **Frontend**: React 19, Vite, Lucide Icons, html5-qrcode, Web Audio API, Canvas Confetti
+- **Backend**: Fastify, TypeScript, Prisma ORM, PostgreSQL, Zod, JWT
+- **Design System**: Vanilla CSS Design System with glassmorphism, responsive grid, and `@media print` rules.
 
 ---
 
 ## 💻 Getting Started
 
-### Prerequisites
-- Node.js (v18+)
-- npm
-
-### Installation & Run
-
+### 1. Install Dependencies
 ```bash
-# Install dependencies
 npm install
-
-# Start local development server
-npm run dev
-
-# Build for production
-npm run build
 ```
 
+### 2. Frontend Development Server
+```bash
+npm run dev
+# or npm run dev:frontend
+```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### 3. Backend Server (Optional / Local API)
+```bash
+# Set up database & generate Prisma client
+npm run prisma:generate
+npm run prisma:migrate
+
+# Start backend server
+npm run dev:backend
+```
+
+### 4. Build for Production
+```bash
+npm run build
+```
