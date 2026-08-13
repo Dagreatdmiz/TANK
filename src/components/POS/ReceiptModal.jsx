@@ -93,12 +93,13 @@ export default function ReceiptModal() {
             <div className="receipt-tear-edge top print:hidden"></div>
 
             {/* Business Header */}
-            <div className="receipt-header text-center">
-              <div className="receipt-store-logo">TANK</div>
-              <h3 className="receipt-business-name font-bold text-black uppercase">{settings.businessName}</h3>
-              <p className="receipt-meta-line text-xs">{settings.address}</p>
-              <p className="receipt-meta-line text-xs">Tel: {settings.phone}</p>
-              {settings.email && <p className="receipt-meta-line text-xs">{settings.email}</p>}
+            <div className="receipt-header text-center flex flex-col items-center justify-center">
+              <div className="receipt-store-logo font-black tracking-tighter text-black text-2xl">TANK</div>
+              <div className="text-[10px] uppercase tracking-widest font-mono font-bold text-gray-600 mb-1">POS & Inventory System</div>
+              <h3 className="receipt-business-name font-black text-base text-black uppercase tracking-tight">{settings.businessName || 'TANK Store'}</h3>
+              <p className="receipt-meta-line text-xs font-medium text-gray-700 mt-0.5">{settings.address}</p>
+              <p className="receipt-meta-line text-xs text-gray-700">Tel: {settings.phone}</p>
+              {settings.email && <p className="receipt-meta-line text-xs text-gray-700">{settings.email}</p>}
             </div>
 
             <div className="receipt-divider dashed"></div>

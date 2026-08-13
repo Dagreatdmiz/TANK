@@ -156,33 +156,33 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
 
   return (
     <div className="modal-backdrop">
-      <div className="modal-card product-modal animate-scale-in">
+      <div className="modal-card product-modal animate-scale-in max-w-lg mx-auto">
         {/* Modal Header */}
-        <div className="modal-header">
+        <div className="modal-header text-left">
           <div className="modal-title-with-icon">
             <div className="icon-badge primary">
               <Package size={20} />
             </div>
             <div>
               <h2 className="text-xl font-bold text-white">
-                {editingProduct ? 'Edit Product' : 'Upload / Add New Goods'}
+                {editingProduct ? 'Edit Product Details' : 'Upload / Add New Goods'}
               </h2>
-              <p className="text-xs text-muted">
-                {editingProduct ? 'Update product information and stock' : 'Scan barcode or fill details to add item to inventory'}
+              <p className="text-xs text-slate-400">
+                Software: <strong>TANK POS</strong> • {editingProduct ? 'Update product information and inventory' : 'Fill details or scan barcode to save item to catalog'}
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="btn-icon text-muted hover:text-white">
+          <button onClick={onClose} className="btn-icon text-slate-400 hover:text-white">
             <X size={20} />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit}>
-          <div className="modal-body space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="modal-body space-y-4 flex-1 overflow-y-auto">
             {/* Product Name */}
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">
+              <label className="text-xs font-semibold text-slate-300 block mb-1 text-left">
                 Product Name *
               </label>
               <input
@@ -190,10 +190,10 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
                 placeholder="e.g. Coca-Cola 50cl Pet Bottle"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className={`input-field text-sm w-full ${errors.name ? 'border-rose-500' : ''}`}
+                className={`input-field text-sm w-full font-medium ${errors.name ? 'border-rose-500' : ''}`}
                 autoFocus
               />
-              {errors.name && <p className="text-[11px] text-rose-400 mt-1">{errors.name}</p>}
+              {errors.name && <p className="text-[11px] text-rose-400 mt-1 text-left">{errors.name}</p>}
             </div>
 
             {/* Barcode / SKU with Embed Camera Scanner Button */}
@@ -206,10 +206,10 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
                   <button
                     type="button"
                     onClick={handleGenerateSKU}
-                    className="text-[11px] text-slate-400 hover:text-emerald-400 flex items-center gap-1"
+                    className="text-[11px] text-slate-400 hover:text-emerald-400 flex items-center gap-1 font-semibold"
                     title="Generate standard random barcode"
                   >
-                    <Dices size={12} /> Generate
+                    <Dices size={12} /> Generate Barcode
                   </button>
                 </div>
               </div>
@@ -227,21 +227,21 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
                 <button
                   type="button"
                   onClick={handleScanSKU}
-                  className="btn btn-emerald-scan flex items-center gap-1.5 px-3 py-2 text-xs font-bold"
+                  className="btn btn-emerald-scan flex items-center gap-1.5 px-3 py-2 text-xs font-bold shrink-0"
                   title="Scan barcode with device camera to fill SKU automatically"
                 >
                   <Camera size={16} />
                   <span>Scan Barcode</span>
                 </button>
               </div>
-              {errors.sku && <p className="text-[11px] text-rose-400 mt-1">{errors.sku}</p>}
+              {errors.sku && <p className="text-[11px] text-rose-400 mt-1 text-left">{errors.sku}</p>}
             </div>
 
             {/* Category & Emoji Icon */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1">
-                  Category
+                  Product Category
                 </label>
                 <select
                   value={formData.category}
@@ -256,10 +256,10 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
 
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1">
-                  Item Icon / Emoji
+                  Item Visual Emoji
                 </label>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl p-1 bg-slate-900 rounded border border-slate-700">{formData.image}</span>
+                  <span className="text-2xl p-1.5 bg-slate-900 rounded-lg border border-slate-700">{formData.image}</span>
                   <select
                     value={formData.image}
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
@@ -274,14 +274,14 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
             </div>
 
             {/* Prices (Cost Price & Selling Price) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-left">
               {/* Cost Price */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-semibold text-slate-300">
-                    Cost Price (Paid by store)
+                    Cost Price (Store COGS)
                   </label>
-                  <span className="text-[10px] text-emerald-400 bg-emerald-950 px-1.5 py-0.2 rounded border border-emerald-900">
+                  <span className="text-[10px] text-emerald-400 bg-emerald-950 px-1.5 py-0.2 rounded border border-emerald-900 font-bold">
                     Admin Only
                   </span>
                 </div>
@@ -299,13 +299,13 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
                     className="input-field pl-8 font-mono text-sm w-full"
                   />
                 </div>
-                <p className="text-[10px] text-slate-500 mt-1">Used to compute accurate gross profit</p>
+                <p className="text-[10px] text-slate-500 mt-1">Computes gross profit metrics</p>
               </div>
 
               {/* Selling Price */}
               <div>
                 <label className="text-xs font-semibold text-emerald-400 block mb-1">
-                  Selling Price (Customer price) *
+                  Selling Price (Customer Price) *
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-emerald-400 font-bold text-sm">
@@ -326,10 +326,10 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
             </div>
 
             {/* Stock Quantity & Low Stock Alert */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1">
-                  Initial Stock Quantity *
+                  Initial Stock Qty *
                 </label>
                 <input
                   type="number"
@@ -344,7 +344,7 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
 
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1">
-                  Low Stock Warning Threshold
+                  Low Stock Threshold
                 </label>
                 <input
                   type="number"
@@ -354,26 +354,26 @@ export default function AddEditProductModal({ isOpen, onClose, editingProduct = 
                   onChange={(e) => setFormData({ ...formData, lowStockThreshold: e.target.value })}
                   className="input-field font-mono text-sm w-full"
                 />
-                <p className="text-[10px] text-slate-500 mt-1">Alerts when inventory reaches this level</p>
+                <p className="text-[10px] text-slate-500 mt-1">Triggers low stock alert banner</p>
               </div>
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="modal-footer justify-between">
+          {/* Footer - PROMINENT SAVE & UPLOAD BUTTON */}
+          <div className="modal-footer justify-between shrink-0 bg-slate-950 border-t border-slate-800 p-4">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-secondary"
+              className="btn btn-secondary text-xs"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="btn btn-primary px-6"
+              className="btn btn-primary px-7 py-2.5 font-extrabold text-sm flex items-center gap-2 shadow-lg shadow-emerald-950/50"
             >
               <Check size={18} />
-              <span>{editingProduct ? 'Save Changes' : 'Upload & Save Product'}</span>
+              <span>{editingProduct ? 'Save Product Changes' : 'Upload & Save Product'}</span>
             </button>
           </div>
         </form>

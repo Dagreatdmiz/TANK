@@ -84,21 +84,21 @@ export default function CheckoutModal() {
 
   return (
     <div className="modal-backdrop">
-      <div className="modal-card checkout-modal animate-scale-in">
+      <div className="modal-card checkout-modal animate-scale-in max-w-lg mx-auto">
         {/* Header */}
         <div className="modal-header">
           <div className="modal-title-with-icon">
             <div className="icon-badge primary">
               <Receipt size={20} />
             </div>
-            <div>
+            <div className="text-left">
               <h2 className="text-xl font-bold text-white">Complete Transaction</h2>
-              <p className="text-xs text-muted">Select payment method and finalize checkout</p>
+              <p className="text-xs text-slate-400">Software: <strong>TANK POS</strong> • Store: <strong>{settings.businessName}</strong></p>
             </div>
           </div>
           <button 
             onClick={() => setIsCheckoutModalOpen(false)}
-            className="btn-icon text-muted hover:text-white"
+            className="btn-icon text-slate-400 hover:text-white"
           >
             <X size={20} />
           </button>
@@ -107,20 +107,20 @@ export default function CheckoutModal() {
         <form onSubmit={handleSubmitSale}>
           <div className="modal-body space-y-4">
             {/* Amount Due Big Banner */}
-            <div className="amount-due-card">
-              <span className="text-xs uppercase tracking-wider text-slate-300 font-semibold">Total Amount Due</span>
-              <div className="text-3xl font-black font-mono text-emerald-400 mt-1">
+            <div className="amount-due-card text-center flex flex-col items-center justify-center py-4">
+              <span className="text-xs uppercase tracking-wider text-slate-300 font-bold">Total Amount Due</span>
+              <div className="text-3xl sm:text-4xl font-black font-mono text-emerald-400 mt-1">
                 {formatCurrency(totalDue, settings.currency)}
               </div>
-              <div className="text-xs text-slate-400 mt-0.5">
+              <div className="text-xs text-slate-400 mt-1 font-medium">
                 {cartTotals.totalUnits} items in cart • {cart.length} unique products
               </div>
             </div>
 
             {/* Payment Method Selector */}
-            <div>
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
-                Payment Method
+            <div className="text-center">
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2 text-center">
+                Select Payment Method
               </label>
               <div className="payment-method-grid">
                 <button
@@ -163,7 +163,7 @@ export default function CheckoutModal() {
 
             {/* Cash Tender Calculation Section */}
             {paymentMethod === 'Cash' && (
-              <div className="cash-tender-section p-3 rounded-xl bg-slate-900 border border-slate-700 animate-fade-in">
+              <div className="cash-tender-section p-3 rounded-xl bg-slate-900 border border-slate-700 animate-fade-in text-center">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-semibold text-slate-300">Amount Tendered by Customer</label>
                   <button
@@ -171,7 +171,7 @@ export default function CheckoutModal() {
                     onClick={handleSetExactTender}
                     className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800"
                   >
-                    Exact Amount ({formatCurrency(totalDue, settings.currency)})
+                    Exact ({formatCurrency(totalDue, settings.currency)})
                   </button>
                 </div>
 
@@ -185,13 +185,13 @@ export default function CheckoutModal() {
                     step="any"
                     value={amountTendered}
                     onChange={(e) => setAmountTendered(e.target.value)}
-                    className="input-field pl-9 py-2.5 font-mono text-lg font-bold text-white w-full"
+                    className="input-field pl-9 py-2.5 font-mono text-lg font-bold text-white text-center w-full"
                     autoFocus
                   />
                 </div>
 
                 {/* Quick denomination pills */}
-                <div className="quick-denominations mt-2 flex flex-wrap gap-1.5">
+                <div className="quick-denominations mt-2 flex flex-wrap justify-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => handleAddPresetTender(500)}
@@ -244,7 +244,7 @@ export default function CheckoutModal() {
 
             {/* Customer Name */}
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">
+              <label className="text-xs font-semibold text-slate-300 block mb-1 text-center">
                 Customer Name / Note (Optional)
               </label>
               <div className="relative">
@@ -254,7 +254,7 @@ export default function CheckoutModal() {
                   placeholder="Walk-in Customer"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="input-field pl-9 py-2 text-xs w-full"
+                  className="input-field pl-9 py-2 text-xs text-center w-full"
                 />
               </div>
             </div>
@@ -265,17 +265,17 @@ export default function CheckoutModal() {
             <button
               type="button"
               onClick={() => setIsCheckoutModalOpen(false)}
-              className="btn btn-secondary"
+              className="btn btn-secondary text-xs"
             >
               Back to POS
             </button>
             <button
               type="submit"
               disabled={!isTenderSufficient}
-              className="btn btn-primary px-6"
+              className="btn btn-primary px-6 text-xs font-bold"
             >
               <CheckCircle2 size={18} />
-              <span>Complete Sale & Print Receipt</span>
+              <span>Complete Sale & Print</span>
             </button>
           </div>
         </form>

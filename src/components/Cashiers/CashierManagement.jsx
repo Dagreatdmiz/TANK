@@ -78,13 +78,16 @@ export default function CashierManagement() {
   return (
     <div className="page-container animate-fade-in">
       {/* Header */}
-      <div className="page-header-row">
-        <div>
-          <h1 className="page-title text-2xl font-black text-white flex items-center gap-2.5">
+      <div className="page-header-row text-center flex flex-col items-center justify-center">
+        <div className="text-center">
+          <div className="text-[10px] uppercase font-mono font-bold tracking-widest text-emerald-400 mb-1">
+            TANK Software • {settings.businessName || 'TANK Store'}
+          </div>
+          <h1 className="page-title text-2xl font-black text-white flex items-center justify-center gap-2.5">
             <Users size={28} className="text-emerald-400" />
             Cashier Management & Access Control
           </h1>
-          <p className="page-subtitle text-xs text-slate-400 mt-0.5">
+          <p className="page-subtitle text-xs text-slate-400 mt-1 text-center">
             Create cashier logins, set PIN codes, and control POS point-of-sale access
           </p>
         </div>
@@ -92,7 +95,7 @@ export default function CashierManagement() {
         <button
           onClick={handleOpenAdd}
           disabled={cashiers.length >= subscription.maxCashiers}
-          className="btn btn-primary px-5 py-2.5 font-bold shadow-lg shadow-emerald-950/40"
+          className="btn btn-primary px-5 py-2.5 font-bold shadow-lg shadow-emerald-950/40 mt-3"
         >
           <UserPlus size={18} />
           <span>Add New Cashier</span>
@@ -108,43 +111,41 @@ export default function CashierManagement() {
           const totalTx = cashierSales.length;
 
           return (
-            <div key={cashier.id} className="cashier-card p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col justify-between">
-              <div>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-sky-400 text-base">
-                      {cashier.name.charAt(0)}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-white text-sm">{cashier.name}</h3>
-                      <div className="text-xs font-mono text-emerald-400 font-semibold">
-                        {cashier.cashierCode}
-                      </div>
+            <div key={cashier.id} className="cashier-card p-5 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col items-center justify-between text-center">
+              <div className="w-full">
+                <div className="flex flex-col items-center justify-center text-center gap-2">
+                  <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-sky-400 text-lg mx-auto">
+                    {cashier.name.charAt(0)}
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-bold text-white text-base text-center">{cashier.name}</h3>
+                    <div className="text-xs font-mono text-emerald-400 font-semibold text-center mt-0.5">
+                      {cashier.cashierCode}
                     </div>
                   </div>
 
-                  <span className={`status-pill ${cashier.status === 'active' ? 'active' : 'inactive'}`}>
-                    {cashier.status === 'active' ? 'Active' : 'Deactivated'}
+                  <span className={`status-pill ${cashier.status === 'active' ? 'active' : 'inactive'} mt-1`}>
+                    {cashier.status === 'active' ? 'Active Cashier' : 'Deactivated'}
                   </span>
                 </div>
 
-                <div className="cashier-info-grid mt-4 space-y-1.5 text-xs text-slate-300">
-                  <div className="flex justify-between">
+                <div className="cashier-info-grid mt-4 space-y-1.5 text-xs text-slate-300 w-full text-center">
+                  <div className="flex justify-between items-center py-0.5">
                     <span className="text-slate-400">Login PIN:</span>
-                    <span className="font-mono text-slate-200">•••• ({cashier.pin})</span>
+                    <span className="font-mono text-slate-200 font-bold">•••• ({cashier.pin})</span>
                   </div>
                   {cashier.phone && (
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center py-0.5">
                       <span className="text-slate-400">Phone:</span>
                       <span className="font-mono text-slate-200">{cashier.phone}</span>
                     </div>
                   )}
-                  <div className="flex justify-between pt-2 border-t border-slate-800">
-                    <span className="text-slate-400">Transactions:</span>
+                  <div className="flex justify-between items-center pt-2 border-t border-slate-800">
+                    <span className="text-slate-400">Sales Completed:</span>
                     <span className="font-mono font-bold text-white">{totalTx} sales</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Total Volume:</span>
+                  <div className="flex justify-between items-center py-0.5">
+                    <span className="text-slate-400">Total Sales Volume:</span>
                     <span className="font-mono font-bold text-emerald-400">
                       {formatCurrency(totalEarned, settings.currency)}
                     </span>
@@ -152,10 +153,10 @@ export default function CashierManagement() {
                 </div>
               </div>
 
-              <div className="cashier-card-footer mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+              <div className="cashier-card-footer mt-4 pt-3 border-t border-slate-800 flex items-center justify-center w-full">
                 <button
                   onClick={() => toggleCashierStatus(cashier.id)}
-                  className={`btn-xs rounded px-2.5 py-1 font-semibold text-xs transition-colors ${
+                  className={`btn-xs rounded px-3 py-1.5 font-semibold text-xs transition-colors w-full ${
                     cashier.status === 'active' 
                       ? 'bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900' 
                       : 'bg-emerald-950/60 text-emerald-300 border border-emerald-800 hover:bg-emerald-900'
@@ -166,6 +167,7 @@ export default function CashierManagement() {
               </div>
             </div>
           );
+
         })}
       </div>
 

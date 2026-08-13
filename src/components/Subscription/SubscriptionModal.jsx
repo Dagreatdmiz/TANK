@@ -238,20 +238,23 @@ export function SubscriptionView() {
 
   return (
     <div className="page-container animate-fade-in max-w-4xl mx-auto">
-      <div className="page-header-row mb-6">
-        <div>
-          <h1 className="page-title text-2xl font-black text-white flex items-center gap-2.5">
+      <div className="page-header-row mb-6 text-center flex flex-col items-center justify-center">
+        <div className="text-center">
+          <div className="text-[10px] uppercase font-mono font-bold tracking-widest text-emerald-400 mb-1">
+            TANK Software • {settings.businessName || 'TANK Store'}
+          </div>
+          <h1 className="page-title text-2xl font-black text-white flex items-center justify-center gap-2.5">
             <Crown size={28} className="text-amber-400" />
             Subscription & Cloud License
           </h1>
-          <p className="page-subtitle text-xs text-slate-400 mt-0.5">
+          <p className="page-subtitle text-xs text-slate-400 mt-1 text-center">
             Manage your store license, product capacity, and renewal cycle
           </p>
         </div>
 
         <button
           onClick={() => setIsUpgradeModalOpen(true)}
-          className="btn btn-amber-upgrade font-bold px-5 py-2.5 flex items-center gap-2"
+          className="btn btn-amber-upgrade font-bold px-5 py-2.5 flex items-center gap-2 mt-3"
         >
           <Sparkles size={17} />
           <span>{isPremium ? 'Renew License (₦80,000)' : 'Upgrade to Premium'}</span>

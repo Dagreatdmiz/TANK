@@ -85,20 +85,23 @@ export default function ProductManagement() {
   return (
     <div className="page-container animate-fade-in">
       {/* Header & Upload Action */}
-      <div className="page-header-row">
-        <div>
-          <h1 className="page-title text-2xl font-black text-white flex items-center gap-2.5">
+      <div className="page-header-row text-center flex flex-col items-center justify-center">
+        <div className="text-center">
+          <div className="text-[10px] uppercase font-mono font-bold tracking-widest text-emerald-400 mb-1">
+            TANK Software • {settings.businessName || 'TANK Catalog'}
+          </div>
+          <h1 className="page-title text-2xl font-black text-white flex items-center justify-center gap-2.5">
             <Package size={28} className="text-emerald-400" />
             Product Management & Inventory
           </h1>
-          <p className="page-subtitle text-xs text-slate-400 mt-0.5">
+          <p className="page-subtitle text-xs text-slate-400 mt-1 text-center">
             Manage your store catalog, upload new goods, and monitor live stock levels
           </p>
         </div>
 
         <button
           onClick={handleOpenAdd}
-          className="btn btn-primary px-5 py-2.5 font-bold shadow-lg shadow-emerald-950/40"
+          className="btn btn-primary px-5 py-2.5 font-bold shadow-lg shadow-emerald-950/40 mt-3"
         >
           <Plus size={18} />
           <span>Upload / Add New Goods</span>
@@ -176,36 +179,37 @@ export default function ProductManagement() {
       </div>
 
       {/* Products Table */}
-      <div className="products-table-wrapper rounded-xl border border-slate-800 overflow-hidden bg-slate-900/40">
-        <table className="w-full text-left border-collapse">
+      <div className="products-table-wrapper rounded-xl border border-slate-800 overflow-x-auto bg-slate-900/40">
+        <table className="w-full text-center border-collapse min-w-[700px]">
           <thead>
             <tr className="border-b border-slate-800 bg-slate-900/80 text-xs font-bold uppercase tracking-wider text-slate-400">
-              <th className="py-3 px-4">Product / Item</th>
-              <th className="py-3 px-4">SKU / Barcode</th>
-              <th className="py-3 px-4">Category</th>
+              <th className="py-3 px-4 text-center">Product / Item</th>
+              <th className="py-3 px-4 text-center">SKU / Barcode</th>
+              <th className="py-3 px-4 text-center">Category</th>
               
               {/* Cost Price Column: Strictly Visible ONLY for Admin */}
               {activeRole === 'admin' && (
-                <th className="py-3 px-4 text-right">
-                  <div className="flex items-center justify-end gap-1">
+                <th className="py-3 px-4 text-center">
+                  <div className="flex items-center justify-center gap-1">
                     <span>Cost Price</span>
                     <span className="text-[9px] bg-slate-800 text-emerald-400 px-1 rounded">Admin</span>
                   </div>
                 </th>
               )}
 
-              <th className="py-3 px-4 text-right">Selling Price</th>
+              <th className="py-3 px-4 text-center">Selling Price</th>
               
               {/* Gross Margin %: Admin Only */}
               {activeRole === 'admin' && (
-                <th className="py-3 px-4 text-right">Gross Margin</th>
+                <th className="py-3 px-4 text-center">Gross Margin</th>
               )}
 
               <th className="py-3 px-4 text-center">Stock Qty</th>
               <th className="py-3 px-4 text-center">Status</th>
-              {activeRole === 'admin' && <th className="py-3 px-4 text-right">Actions</th>}
+              {activeRole === 'admin' && <th className="py-3 px-4 text-center">Actions</th>}
             </tr>
           </thead>
+
           <tbody className="divide-y divide-slate-800/60 text-xs text-slate-300">
             {filteredProducts.length === 0 ? (
               <tr>
@@ -228,46 +232,47 @@ export default function ProductManagement() {
                 return (
                   <tr key={product.id} className="hover:bg-slate-800/30 transition-colors">
                     {/* Item Name */}
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-3">
+                    <td className="py-3 px-4 text-center">
+                      <div className="flex items-center justify-center gap-3">
                         <span className="text-xl p-1 bg-slate-800 rounded">{product.image || '📦'}</span>
-                        <div>
-                          <div className="font-bold text-white text-sm">{product.name}</div>
-                          <div className="text-[11px] text-slate-500">{product.category}</div>
+                        <div className="text-center">
+                          <div className="font-bold text-white text-sm text-center">{product.name}</div>
+                          <div className="text-[11px] text-slate-500 text-center">{product.category}</div>
                         </div>
                       </div>
                     </td>
 
                     {/* Barcode */}
-                    <td className="py-3 px-4 font-mono text-slate-400">
+                    <td className="py-3 px-4 font-mono text-slate-400 text-center">
                       {product.sku}
                     </td>
 
                     {/* Category */}
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 text-center">
                       <span className="category-pill-sm">{product.category || 'General'}</span>
                     </td>
 
                     {/* Cost Price (Admin Only) */}
                     {activeRole === 'admin' && (
-                      <td className="py-3 px-4 text-right font-mono text-slate-400">
+                      <td className="py-3 px-4 text-center font-mono text-slate-400">
                         {formatCurrency(product.costPrice, settings.currency)}
                       </td>
                     )}
 
                     {/* Selling Price */}
-                    <td className="py-3 px-4 text-right font-mono font-bold text-emerald-400 text-sm">
+                    <td className="py-3 px-4 text-center font-mono font-bold text-emerald-400 text-sm">
                       {formatCurrency(product.sellingPrice, settings.currency)}
                     </td>
 
                     {/* Margin (Admin Only) */}
                     {activeRole === 'admin' && (
-                      <td className="py-3 px-4 text-right font-mono font-semibold text-slate-300">
+                      <td className="py-3 px-4 text-center font-mono font-semibold text-slate-300">
                         <span className={`px-1.5 py-0.5 rounded ${margin >= 30 ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-300'}`}>
                           {margin}%
                         </span>
                       </td>
                     )}
+
 
                     {/* Stock Qty */}
                     <td className="py-3 px-4 text-center">
@@ -289,8 +294,8 @@ export default function ProductManagement() {
 
                     {/* Actions (Admin Only) */}
                     {activeRole === 'admin' && (
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="py-3 px-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => handleEdit(product)}
                             className="btn-icon-sm text-slate-400 hover:text-emerald-400"
@@ -308,6 +313,7 @@ export default function ProductManagement() {
                         </div>
                       </td>
                     )}
+
                   </tr>
                 );
               })

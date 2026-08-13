@@ -13,7 +13,7 @@ import {
 import { useStore } from '../../context/StoreContext';
 import { formatCurrency } from '../../utils/formatters';
 
-export default function CartSidebar() {
+export default function CartSidebar({ onClose = null }) {
   const { 
     cart, 
     updateCartQty, 
@@ -31,7 +31,7 @@ export default function CartSidebar() {
   const [showDiscountInput, setShowDiscountInput] = useState(false);
 
   return (
-    <aside className="pos-cart-panel">
+    <aside className={`pos-cart-panel ${!onClose ? 'desktop-only' : ''}`}>
       {/* Cart Header */}
       <div className="cart-header">
         <div className="flex items-center gap-2">
@@ -39,24 +39,36 @@ export default function CartSidebar() {
           <h2 className="font-bold text-base text-white">Current Sale</h2>
           <span className="cart-count-pill">{cartTotals.totalUnits} items</span>
         </div>
-        {cart.length > 0 && (
-          <button 
-            onClick={clearCart}
-            className="clear-cart-btn text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1"
-            title="Clear all items in cart"
-          >
-            <Trash2 size={14} /> Clear
-          </button>
-        )}
+        
+        <div className="flex items-center gap-2">
+          {cart.length > 0 && (
+            <button 
+              onClick={clearCart}
+              className="clear-cart-btn text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-semibold"
+              title="Clear all items in cart"
+            >
+              <Trash2 size={14} /> Clear
+            </button>
+          )}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="btn-icon text-slate-400 hover:text-white"
+              title="Close cart"
+            >
+              <X size={20} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Cart Items List */}
       <div className="cart-items-container">
         {cart.length === 0 ? (
-          <div className="empty-cart-state">
-            <div className="empty-cart-icon">🛒</div>
-            <p className="text-sm font-semibold text-slate-300">Cart is empty</p>
-            <p className="text-xs text-slate-500 mt-1 max-w-[200px]">
+          <div className="empty-cart-state py-8 text-center flex flex-col items-center justify-center">
+            <div className="empty-cart-icon text-4xl mb-2">🛒</div>
+            <p className="text-sm font-bold text-slate-200 text-center">Cart is empty</p>
+            <p className="text-xs text-slate-500 mt-1 max-w-[220px] text-center mx-auto">
               Tap products from the catalog or scan barcodes to add items
             </p>
           </div>
@@ -70,7 +82,7 @@ export default function CartSidebar() {
                   <div className="item-title truncate font-medium text-sm text-white">
                     {item.product.name}
                   </div>
-                  <div className="item-price-meta text-xs text-slate-400">
+                  <div className="item-price-meta text-xs text-slate-400 font-mono">
                     {formatCurrency(item.product.sellingPrice, settings.currency)} each
                   </div>
                 </div>
@@ -212,7 +224,10 @@ export default function CartSidebar() {
 
         {/* Checkout Button */}
         <button
-          onClick={() => setIsCheckoutModalOpen(true)}
+          onClick={() => {
+            if (onClose) onClose();
+            setIsCheckoutModalOpen(true);
+          }}
           disabled={cart.length === 0}
           className="btn-checkout-primary w-full"
         >
@@ -223,3 +238,4 @@ export default function CartSidebar() {
     </aside>
   );
 }
+

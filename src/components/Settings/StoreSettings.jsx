@@ -40,21 +40,21 @@ export default function StoreSettings() {
   return (
     <div className="page-container animate-fade-in max-w-4xl mx-auto">
       {/* Header */}
-      <div className="page-header-row mb-6">
-        <div>
-          <h1 className="page-title text-2xl font-black text-white flex items-center gap-2.5">
+      <div className="page-header-row mb-6 text-center flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h1 className="page-title text-2xl font-black text-white flex items-center justify-center gap-2.5">
             <Settings size={28} className="text-emerald-400" />
             Store & Receipt Configuration
           </h1>
-          <p className="page-subtitle text-xs text-slate-400 mt-0.5">
-            Configure your business details, thermal printer options, and customer receipt footer
+          <p className="page-subtitle text-xs text-slate-400 mt-1 text-center">
+            Software: <strong className="text-emerald-400">TANK POS</strong> • Customize your business name, printer settings & receipts
           </p>
         </div>
 
         {savedSuccess && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-700 text-emerald-300 text-xs font-bold animate-scale-in">
+          <div className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-950/80 border border-emerald-700 text-emerald-300 text-xs font-bold animate-scale-in mt-2">
             <Check size={16} />
-            <span>Settings Saved Successfully!</span>
+            <span>Business Settings Saved Successfully!</span>
           </div>
         )}
       </div>
@@ -62,40 +62,40 @@ export default function StoreSettings() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Business Profile Card */}
         <div className="settings-card p-5 rounded-xl bg-slate-900/80 border border-slate-800">
-          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
+          <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-slate-800 text-center">
             <Store size={18} className="text-emerald-400" />
-            <h2 className="text-base font-bold text-white">Business Profile</h2>
+            <h2 className="text-base font-bold text-white text-center">Business Profile</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">
+              <label className="text-xs font-semibold text-slate-300 block mb-1 text-center">
                 Store / Supermarket Name *
               </label>
               <input
                 type="text"
                 value={formData.businessName || ''}
                 onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                className="input-field text-sm w-full font-bold"
+                className="input-field text-sm w-full font-bold text-center"
                 required
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">
+              <label className="text-xs font-semibold text-slate-300 block mb-1 text-center">
                 Owner / Manager Name *
               </label>
               <input
                 type="text"
                 value={formData.ownerName || ''}
                 onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
-                className="input-field text-sm w-full"
+                className="input-field text-sm w-full text-center"
                 required
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">
+              <label className="text-xs font-semibold text-slate-300 block mb-1 text-center">
                 Store Phone Number
               </label>
               <div className="relative">
@@ -104,13 +104,13 @@ export default function StoreSettings() {
                   type="text"
                   value={formData.phone || ''}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="input-field pl-9 text-sm w-full"
+                  className="input-field pl-9 text-sm w-full text-center"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">
+              <label className="text-xs font-semibold text-slate-300 block mb-1 text-center">
                 Store Email Address
               </label>
               <div className="relative">
@@ -119,33 +119,30 @@ export default function StoreSettings() {
                   type="email"
                   value={formData.email || ''}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="input-field pl-9 text-sm w-full"
+                  className="input-field pl-9 text-sm w-full text-center"
                 />
               </div>
             </div>
 
             <div className="md:col-span-2">
-              <label className="text-xs font-semibold text-slate-300 block mb-1">
+              <label className="text-xs font-semibold text-slate-300 block mb-1 text-center">
                 Store Street Address (Printed on Receipts)
               </label>
-              <div className="relative">
-                <MapPin size={15} className="absolute left-3 top-3 text-slate-400" />
-                <textarea
-                  rows="2"
-                  value={formData.address || ''}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="input-field pl-9 text-sm w-full"
-                />
-              </div>
+              <input
+                type="text"
+                value={formData.address || ''}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                className="input-field text-sm w-full text-center"
+              />
             </div>
           </div>
         </div>
 
-        {/* Currency & Financials */}
+        {/* Currency & Theme Settings */}
         <div className="settings-card p-5 rounded-xl bg-slate-900/80 border border-slate-800">
           <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
             <DollarSign size={18} className="text-emerald-400" />
-            <h2 className="text-base font-bold text-white">Currency & Regional Settings</h2>
+            <h2 className="text-base font-bold text-white">Currency & Visual Background Theme</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -163,8 +160,31 @@ export default function StoreSettings() {
                 ))}
               </select>
             </div>
+
+            <div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Visual Software Background Theme
+              </label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, theme: 'dark' })}
+                  className={`flex-1 py-2 px-3 rounded-lg border text-xs font-bold transition-all ${formData.theme === 'dark' ? 'border-emerald-500 bg-emerald-950/40 text-emerald-300' : 'border-slate-800 bg-slate-950 text-slate-400'}`}
+                >
+                  Clear Dark Glass
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, theme: 'light' })}
+                  className={`flex-1 py-2 px-3 rounded-lg border text-xs font-bold transition-all ${formData.theme === 'light' ? 'border-emerald-500 bg-emerald-950/40 text-emerald-300' : 'border-slate-800 bg-slate-950 text-slate-400'}`}
+                >
+                  Clear Light Slate
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+
 
         {/* Thermal Printer & Receipt Layout */}
         <div className="settings-card p-5 rounded-xl bg-slate-900/80 border border-slate-800">
@@ -230,15 +250,16 @@ export default function StoreSettings() {
         </div>
 
         {/* Save Button */}
-        <div className="flex justify-end pt-2">
+        <div className="flex justify-center items-center pt-2 text-center">
           <button
             type="submit"
-            className="btn btn-primary px-8 py-2.5 font-bold flex items-center gap-2"
+            className="btn btn-primary px-10 py-3 font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 text-center"
           >
             <Save size={18} />
             <span>Save Configuration</span>
           </button>
         </div>
+
       </form>
     </div>
   );

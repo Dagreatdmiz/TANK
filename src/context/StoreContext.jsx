@@ -80,7 +80,23 @@ export function StoreProvider({ children }) {
   // Persistent storage hooks
   useEffect(() => {
     localStorage.setItem('tank_settings', JSON.stringify(settings));
+    if (settings?.theme === 'dark') {
+      document.body.classList.add('theme-dark');
+      document.body.classList.remove('theme-light');
+    } else {
+      document.body.classList.add('theme-light');
+      document.body.classList.remove('theme-dark');
+    }
   }, [settings]);
+
+
+  const toggleTheme = () => {
+    setSettings(prev => ({
+      ...prev,
+      theme: prev.theme === 'light' ? 'dark' : 'light'
+    }));
+  };
+
 
   useEffect(() => {
     localStorage.setItem('tank_subscription', JSON.stringify(subscription));
@@ -438,6 +454,7 @@ export function StoreProvider({ children }) {
   const value = {
     settings,
     setSettings,
+    toggleTheme,
     subscription,
     cashiers,
     activeRole,

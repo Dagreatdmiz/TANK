@@ -13,7 +13,9 @@ import {
   Package,
   Layers,
   Filter,
-  UserCheck
+  UserCheck,
+  Store,
+  ArrowRight
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatCurrency, formatDateOnly } from '../../utils/formatters';
@@ -24,6 +26,7 @@ export default function POSDashboard() {
     products, 
     addToCart, 
     cart, 
+    cartTotals,
     openQRScanner, 
     activeRole, 
     activeCashier, 
@@ -31,12 +34,14 @@ export default function POSDashboard() {
     settings,
     setActiveTab,
     subscription,
-    setIsUpgradeModalOpen
+    setIsUpgradeModalOpen,
+    setIsCheckoutModalOpen
   } = useStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [addedAnimationId, setAddedAnimationId] = useState(null);
+  const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
 
   // Extract distinct categories
   const categories = useMemo(() => {
@@ -138,18 +143,47 @@ export default function POSDashboard() {
     <div className="pos-layout-container">
       {/* Main POS Left Content */}
       <div className="pos-main-content">
+        {/* Welcome Header Banner with Customizable Business Name */}
+        <div className="pos-welcome-banner p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-emerald-950/40 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 text-center">
+          <div className="flex flex-col md:flex-row items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mx-auto">
+              <Store size={26} />
+            </div>
+            <div className="text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40">
+                  TANK Software POS
+                </span>
+                <span className="text-xs text-slate-400 font-mono">
+                  {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+              </div>
+              <h2 className="text-lg font-black text-white mt-0.5 text-center md:text-left">
+                {settings.businessName || 'TANK Supermarket'}
+              </h2>
+            </div>
+          </div>
+
+          <div className="text-center md:text-right">
+            <div className="text-xs font-semibold text-slate-400 text-center md:text-right">Current Cashier Terminal</div>
+            <div className="text-sm font-bold text-white font-mono text-center md:text-right">
+              {activeRole === 'admin' ? '👑 Admin / Store Owner' : `💳 ${activeCashier.name} (${activeCashier.cashierCode})`}
+            </div>
+          </div>
+        </div>
+
         {/* Metric Summary Cards */}
         <div className="pos-metrics-grid">
           {/* Revenue Metric */}
-          <div className="metric-card">
-            <div className="metric-icon-box bg-emerald-500/10 text-emerald-400">
+          <div className="metric-card text-center flex flex-col items-center justify-center">
+            <div className="metric-icon-box bg-emerald-500/10 text-emerald-400 mx-auto mb-1">
               <TrendingUp size={20} />
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <div className="text-center">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">
                 {activeRole === 'admin' ? "Today's Total Sales" : "My Sales Today"}
               </p>
-              <h3 className="text-xl font-bold font-mono text-white">
+              <h3 className="text-xl font-bold font-mono text-white text-center">
                 {formatCurrency(todayMetrics.totalRevenue, settings.currency)}
               </h3>
             </div>
@@ -157,83 +191,84 @@ export default function POSDashboard() {
 
           {/* GROSS PROFIT METRIC — STRICTLY ONLY SHOWN FOR ADMIN / OWNER */}
           {activeRole === 'admin' ? (
-            <div className="metric-card gross-profit-card">
-              <div className="metric-icon-box bg-emerald-500/20 text-emerald-300">
+            <div className="metric-card gross-profit-card text-center flex flex-col items-center justify-center">
+              <div className="metric-icon-box bg-emerald-500/20 text-emerald-300 mx-auto mb-1">
                 <DollarSign size={20} />
               </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-1.5">
+                  <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider text-center">
                     Today's Gross Profit
                   </p>
-                  <span className="text-[10px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded border border-emerald-800 font-bold">
-                    Admin Only
+                  <span className="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded border border-emerald-800 font-bold">
+                    Admin
                   </span>
                 </div>
-                <h3 className="text-xl font-bold font-mono text-emerald-400">
+                <h3 className="text-xl font-bold font-mono text-emerald-400 text-center">
                   {formatCurrency(todayMetrics.totalGrossProfit, settings.currency)}
                 </h3>
               </div>
             </div>
           ) : (
             /* Cashier replacement card (Units Sold) so cashier never sees profit */
-            <div className="metric-card">
-              <div className="metric-icon-box bg-sky-500/10 text-sky-400">
+            <div className="metric-card text-center flex flex-col items-center justify-center">
+              <div className="metric-icon-box bg-sky-500/10 text-sky-400 mx-auto mb-1">
                 <Package size={20} />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <div className="text-center">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">
                   Units Sold Today
                 </p>
-                <h3 className="text-xl font-bold font-mono text-white">
-                  {todayMetrics.unitsSold} units
+                <h3 className="text-xl font-bold font-mono text-white text-center">
+                  {todayMetrics.unitsSold} items
                 </h3>
               </div>
             </div>
           )}
 
           {/* Transactions Count */}
-          <div className="metric-card">
-            <div className="metric-icon-box bg-blue-500/10 text-blue-400">
-              <ShoppingBag size={20} />
+          <div className="metric-card text-center flex flex-col items-center justify-center">
+            <div className="metric-icon-box bg-sky-500/10 text-sky-400 mx-auto mb-1">
+              <Receipt size={20} />
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <div className="text-center">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">
                 {activeRole === 'admin' ? 'Total Transactions' : 'My Transactions'}
               </p>
-              <h3 className="text-xl font-bold font-mono text-white">
-                {todayMetrics.txCount}
+              <h3 className="text-xl font-bold font-mono text-white text-center">
+                {todayMetrics.txCount} completed
               </h3>
             </div>
           </div>
 
           {/* Low Stock Alerts (or Cashier Code badge) */}
           {activeRole === 'admin' ? (
-            <div className="metric-card cursor-pointer hover:border-slate-700" onClick={() => setActiveTab('products')}>
-              <div className={`metric-icon-box ${todayMetrics.lowStockCount > 0 ? 'bg-amber-500/10 text-amber-400' : 'bg-slate-800 text-slate-400'}`}>
+            <div className="metric-card cursor-pointer hover:border-slate-700 text-center flex flex-col items-center justify-center" onClick={() => setActiveTab('products')}>
+              <div className={`metric-icon-box mx-auto mb-1 ${todayMetrics.lowStockCount > 0 ? 'bg-amber-500/10 text-amber-400' : 'bg-slate-800 text-slate-400'}`}>
                 <AlertTriangle size={20} />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Low Stock Alerts</p>
-                <h3 className={`text-xl font-bold font-mono ${todayMetrics.lowStockCount > 0 ? 'text-amber-400' : 'text-slate-300'}`}>
+              <div className="text-center">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Low Stock Alerts</p>
+                <h3 className={`text-xl font-bold font-mono text-center ${todayMetrics.lowStockCount > 0 ? 'text-amber-400' : 'text-slate-300'}`}>
                   {todayMetrics.lowStockCount} items
                 </h3>
               </div>
             </div>
           ) : (
-            <div className="metric-card">
-              <div className="metric-icon-box bg-purple-500/10 text-purple-400">
+            <div className="metric-card text-center flex flex-col items-center justify-center">
+              <div className="metric-icon-box bg-purple-500/10 text-purple-400 mx-auto mb-1">
                 <UserCheck size={20} />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cashier Terminal</p>
-                <h3 className="text-sm font-bold text-white truncate">
+              <div className="text-center">
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Cashier Terminal</p>
+                <h3 className="text-sm font-bold text-white text-center truncate">
                   {activeCashier.cashierCode} • {activeCashier.name}
                 </h3>
               </div>
             </div>
           )}
         </div>
+
 
         {/* LONG SEARCH BAR WITH QR SCANNER ICON ON THE LEFT SIDE */}
         <div className="pos-search-wrapper">
@@ -323,10 +358,10 @@ export default function POSDashboard() {
         {/* Interactive Products Grid */}
         <div className="pos-product-section">
           {filteredProducts.length === 0 ? (
-            <div className="empty-search-state py-12 text-center">
+            <div className="empty-search-state py-12 text-center flex flex-col items-center justify-center">
               <Package size={48} className="mx-auto text-slate-600 mb-3" />
-              <h4 className="text-base font-bold text-slate-300">No products found</h4>
-              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              <h4 className="text-base font-bold text-slate-300 text-center">No products found</h4>
+              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto text-center">
                 {searchQuery 
                   ? `No items match "${searchQuery}". Try scanning the barcode or check spelling.`
                   : 'No items in this category. Click "Products & Upload" to add new goods.'}
@@ -369,7 +404,7 @@ export default function POSDashboard() {
                     </div>
 
                     {/* Product Icon & Visual */}
-                    <div className="product-image-container">
+                    <div className="product-image-container text-center">
                       <span className="product-emoji-icon">{product.image || '📦'}</span>
                       {inCartItem && (
                         <div className="in-cart-indicator-badge animate-scale-in">
@@ -379,11 +414,11 @@ export default function POSDashboard() {
                     </div>
 
                     {/* Product Details */}
-                    <div className="product-card-info">
-                      <h4 className="product-card-title" title={product.name}>
+                    <div className="product-card-info text-center">
+                      <h4 className="product-card-title text-center" title={product.name}>
                         {product.name}
                       </h4>
-                      <div className="product-card-sku font-mono text-[11px] text-slate-400">
+                      <div className="product-card-sku font-mono text-[11px] text-slate-400 text-center">
                         {product.sku}
                       </div>
 
@@ -409,8 +444,53 @@ export default function POSDashboard() {
         </div>
       </div>
 
-      {/* POS Cart Sidebar Panel */}
+      {/* POS Cart Sidebar Panel (Desktop View) */}
       <CartSidebar />
+
+      {/* Mobile Floating Cart Action Bar (Visible on mobile when cart has items) */}
+      {cart.length > 0 && (
+        <div className="mobile-cart-float-bar lg:hidden animate-fade-in">
+          <div className="flex items-center gap-2" onClick={() => setIsMobileCartOpen(true)}>
+            <div className="w-10 h-10 rounded-xl bg-emerald-500 text-black flex items-center justify-center font-bold">
+              <ShoppingBag size={20} />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white">
+                {cartTotals.totalUnits} items in cart
+              </div>
+              <div className="text-sm font-black font-mono text-emerald-400">
+                {formatCurrency(cartTotals.total, settings.currency)}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsMobileCartOpen(true)}
+              className="btn btn-secondary text-xs py-2 px-3"
+            >
+              View Cart
+            </button>
+            <button
+              onClick={() => setIsCheckoutModalOpen(true)}
+              className="btn btn-primary text-xs py-2 px-4 font-bold flex items-center gap-1"
+            >
+              <span>Pay Now</span>
+              <ArrowRight size={14} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Cart Slide-up Sheet Overlay */}
+      {isMobileCartOpen && (
+        <div className="mobile-cart-overlay lg:hidden">
+          <div className="mobile-cart-sheet">
+            <CartSidebar onClose={() => setIsMobileCartOpen(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

@@ -150,13 +150,16 @@ export default function SalesReport() {
   return (
     <div className="page-container animate-fade-in">
       {/* Report Header */}
-      <div className="page-header-row">
-        <div>
-          <h1 className="page-title text-2xl font-black text-white flex items-center gap-2.5">
+      <div className="page-header-row text-center flex flex-col items-center justify-center">
+        <div className="text-center">
+          <div className="text-[10px] uppercase font-mono font-bold tracking-widest text-emerald-400 mb-1">
+            TANK Software • {settings.businessName || 'TANK Store'}
+          </div>
+          <h1 className="page-title text-2xl font-black text-white flex items-center justify-center gap-2.5">
             <BarChart3 size={28} className="text-emerald-400" />
             {activeRole === 'admin' ? 'End-of-Day Sales & Profit Report' : 'End-of-Day Cashier Sales Report'}
           </h1>
-          <p className="page-subtitle text-xs text-slate-400 mt-0.5">
+          <p className="page-subtitle text-xs text-slate-400 mt-1 text-center">
             {activeRole === 'admin' 
               ? 'Complete financial breakdown: Revenue, Cost of Goods Sold, and Gross Profit'
               : 'Your daily sales performance, completed transactions, and payment summary'}
@@ -164,7 +167,7 @@ export default function SalesReport() {
         </div>
 
         {/* Date Filter Buttons */}
-        <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+        <div className="flex items-center justify-center flex-wrap gap-1.5 bg-slate-900 p-1.5 rounded-xl border border-slate-800 mt-3">
           <button
             onClick={() => setDateFilter('today')}
             className={`filter-btn-pill ${dateFilter === 'today' ? 'active' : ''}`}
@@ -221,97 +224,94 @@ export default function SalesReport() {
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* Revenue */}
-        <div className="metric-card">
-          <div className="metric-icon-box bg-emerald-500/10 text-emerald-400">
+        <div className="metric-card text-center flex flex-col items-center justify-center">
+          <div className="metric-icon-box bg-emerald-500/10 text-emerald-400 mx-auto mb-1">
             <TrendingUp size={22} />
           </div>
-          <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Sales Revenue</p>
-            <h3 className="text-2xl font-black font-mono text-white mt-0.5">
+          <div className="text-center">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Total Sales Revenue</p>
+            <h3 className="text-2xl font-black font-mono text-white mt-0.5 text-center">
               {formatCurrency(metrics.totalRevenue, settings.currency)}
             </h3>
-            <p className="text-[11px] text-slate-500 mt-0.5">{metrics.txCount} transactions completed</p>
+            <p className="text-[11px] text-slate-500 mt-0.5 text-center">{metrics.txCount} transactions completed</p>
           </div>
         </div>
 
         {/* GROSS PROFIT CARD — STRICTLY FOR ADMIN / OWNER ONLY */}
         {activeRole === 'admin' ? (
-          <div className="metric-card gross-profit-card">
-            <div className="metric-icon-box bg-emerald-500/20 text-emerald-300">
+          <div className="metric-card gross-profit-card text-center flex flex-col items-center justify-center">
+            <div className="metric-icon-box bg-emerald-500/20 text-emerald-300 mx-auto mb-1">
               <DollarSign size={22} />
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Total Gross Profit</p>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1.5">
+                <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider text-center">Total Gross Profit</p>
                 <span className="text-[9px] bg-emerald-950 text-emerald-300 px-1 py-0.2 rounded border border-emerald-800 font-bold">
-                  Owner Only
+                  Owner
                 </span>
               </div>
-              <h3 className="text-2xl font-black font-mono text-emerald-400 mt-0.5">
+              <h3 className="text-2xl font-black font-mono text-emerald-400 mt-0.5 text-center">
                 {formatCurrency(metrics.totalGrossProfit, settings.currency)}
               </h3>
-              <p className="text-[11px] text-emerald-500/80 mt-0.5">
+              <p className="text-[11px] text-emerald-500/80 mt-0.5 text-center">
                 Gross Margin: <span className="font-bold font-mono">{metrics.profitMargin}%</span>
               </p>
             </div>
           </div>
         ) : (
           /* Locked card informing cashier that profit is restricted */
-          <div className="metric-card border-slate-800 bg-slate-900/40">
-            <div className="metric-icon-box bg-slate-800 text-slate-400">
+          <div className="metric-card border-slate-800 bg-slate-900/40 text-center flex flex-col items-center justify-center">
+            <div className="metric-icon-box bg-slate-800 text-slate-400 mx-auto mb-1">
               <Lock size={20} />
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Profit Calculations</p>
-              <h3 className="text-sm font-bold text-slate-400 mt-1">Restricted to Store Owner</h3>
-              <p className="text-[10px] text-slate-500 mt-0.5">Cashier view excludes margin data</p>
+            <div className="text-center">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Profit Calculations</p>
+              <h3 className="text-sm font-bold text-slate-400 mt-1 text-center">Restricted to Store Owner</h3>
+              <p className="text-[10px] text-slate-500 mt-0.5 text-center">Cashier view excludes margin data</p>
             </div>
           </div>
         )}
 
         {/* Cost of Goods Sold (Admin) or Total Units Sold (Cashier) */}
         {activeRole === 'admin' ? (
-          <div className="metric-card">
-            <div className="metric-icon-box bg-slate-800 text-slate-300">
+          <div className="metric-card text-center flex flex-col items-center justify-center">
+            <div className="metric-icon-box bg-slate-800 text-slate-300 mx-auto mb-1">
               <Layers size={22} />
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cost of Goods Sold (COGS)</p>
-              <h3 className="text-2xl font-black font-mono text-slate-200 mt-0.5">
+            <div className="text-center">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Cost of Goods (COGS)</p>
+              <h3 className="text-2xl font-black font-mono text-white mt-0.5 text-center">
                 {formatCurrency(metrics.totalCOGS, settings.currency)}
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">Discounts given: {formatCurrency(metrics.totalDiscounts, settings.currency)}</p>
+              <p className="text-[11px] text-slate-500 mt-0.5 text-center">Cost paid for goods sold</p>
             </div>
           </div>
         ) : (
-          <div className="metric-card">
-            <div className="metric-icon-box bg-sky-500/10 text-sky-400">
+          <div className="metric-card text-center flex flex-col items-center justify-center">
+            <div className="metric-icon-box bg-sky-500/10 text-sky-400 mx-auto mb-1">
               <ShoppingBag size={22} />
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Units Sold</p>
-              <h3 className="text-2xl font-black font-mono text-white mt-0.5">
-                {metrics.unitsSold} units
+            <div className="text-center">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Total Units Sold</p>
+              <h3 className="text-2xl font-black font-mono text-white mt-0.5 text-center">
+                {metrics.unitsSold} items
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">Across {metrics.txCount} sales</p>
+              <p className="text-[11px] text-slate-500 mt-0.5 text-center">Quantity of items scanned</p>
             </div>
           </div>
         )}
 
         {/* Average Transaction Value */}
-        <div className="metric-card">
-          <div className="metric-icon-box bg-purple-500/10 text-purple-400">
-            <ShoppingBag size={22} />
+        <div className="metric-card text-center flex flex-col items-center justify-center">
+          <div className="metric-icon-box bg-sky-500/10 text-sky-400 mx-auto mb-1">
+            <CreditCard size={22} />
           </div>
-          <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Average Sale Basket</p>
-            <h3 className="text-2xl font-black font-mono text-white mt-0.5">
-              {metrics.txCount > 0 
-                ? formatCurrency(metrics.totalRevenue / metrics.txCount, settings.currency)
-                : formatCurrency(0, settings.currency)
-              }
+          <div className="text-center">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center">Average Order Value</p>
+            <h3 className="text-2xl font-black font-mono text-white mt-0.5 text-center">
+              {formatCurrency(metrics.avgOrderValue, settings.currency)}
             </h3>
-            <p className="text-[11px] text-slate-500 mt-0.5">{metrics.unitsSold} total items</p>
+            <p className="text-[11px] text-slate-500 mt-0.5 text-center">Per completed sale</p>
           </div>
         </div>
       </div>
@@ -415,30 +415,30 @@ export default function SalesReport() {
       {/* Cashier Performance Table (Admin Only) */}
       {activeRole === 'admin' && Object.keys(metrics.cashierPerformance).length > 0 && (
         <div className="mb-6 p-4 rounded-xl bg-slate-900/60 border border-slate-800">
-          <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-bold text-white mb-3 flex items-center justify-center gap-2 text-center">
             <User size={17} className="text-purple-400" />
             <span>Cashier Performance Breakdown</span>
           </h3>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-center text-xs">
               <thead>
                 <tr className="border-b border-slate-800 text-slate-400 uppercase font-semibold">
-                  <th className="py-2 px-3">Cashier</th>
+                  <th className="py-2 px-3 text-center">Cashier</th>
                   <th className="py-2 px-3 text-center">Sales Completed</th>
-                  <th className="py-2 px-3 text-right">Revenue Generated</th>
-                  <th className="py-2 px-3 text-right">Gross Profit Generated</th>
+                  <th className="py-2 px-3 text-center">Revenue Generated</th>
+                  <th className="py-2 px-3 text-center">Gross Profit Generated</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {Object.entries(metrics.cashierPerformance).map(([cName, perf], i) => (
                   <tr key={i} className="hover:bg-slate-800/30">
-                    <td className="py-2.5 px-3 font-semibold text-white">{cName}</td>
+                    <td className="py-2.5 px-3 font-semibold text-white text-center">{cName}</td>
                     <td className="py-2.5 px-3 text-center font-mono text-slate-300">{perf.count}</td>
-                    <td className="py-2.5 px-3 text-right font-mono font-bold text-emerald-400">
+                    <td className="py-2.5 px-3 text-center font-mono font-bold text-emerald-400">
                       {formatCurrency(perf.revenue, settings.currency)}
                     </td>
-                    <td className="py-2.5 px-3 text-right font-mono font-semibold text-emerald-300">
+                    <td className="py-2.5 px-3 text-center font-mono font-semibold text-emerald-300">
                       {formatCurrency(perf.profit, settings.currency)}
                     </td>
                   </tr>
@@ -448,6 +448,7 @@ export default function SalesReport() {
           </div>
         </div>
       )}
+
 
       {/* Transaction History Log */}
       <div className="sales-history-section rounded-xl border border-slate-800 overflow-hidden bg-slate-900/40">
@@ -460,17 +461,17 @@ export default function SalesReport() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-center border-collapse text-xs min-w-[750px]">
             <thead>
               <tr className="border-b border-slate-800 bg-slate-900/40 uppercase font-semibold text-slate-400">
-                <th className="py-3 px-4">Receipt No</th>
-                <th className="py-3 px-4">Date & Time</th>
-                <th className="py-3 px-4">Cashier</th>
-                <th className="py-3 px-4">Payment</th>
+                <th className="py-3 px-4 text-center">Receipt No</th>
+                <th className="py-3 px-4 text-center">Date & Time</th>
+                <th className="py-3 px-4 text-center">Cashier</th>
+                <th className="py-3 px-4 text-center">Payment</th>
                 <th className="py-3 px-4 text-center">Items</th>
-                <th className="py-3 px-4 text-right">Total</th>
-                {activeRole === 'admin' && <th className="py-3 px-4 text-right">Gross Profit</th>}
-                <th className="py-3 px-4 text-right">Receipt</th>
+                <th className="py-3 px-4 text-center">Total</th>
+                {activeRole === 'admin' && <th className="py-3 px-4 text-center">Gross Profit</th>}
+                <th className="py-3 px-4 text-center">Receipt</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -483,30 +484,30 @@ export default function SalesReport() {
               ) : (
                 filteredSales.map(sale => (
                   <tr key={sale.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="py-3 px-4 font-mono font-semibold text-white">
+                    <td className="py-3 px-4 font-mono font-semibold text-white text-center">
                       {sale.receiptNo}
                     </td>
-                    <td className="py-3 px-4 text-slate-400">
+                    <td className="py-3 px-4 text-slate-400 text-center">
                       {formatDateTime(sale.createdAt)}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 text-center">
                       {sale.cashierName}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 text-center">
                       <span className="payment-method-pill">{sale.paymentMethod}</span>
                     </td>
                     <td className="py-3 px-4 text-center font-mono">
                       {sale.items?.reduce((a, b) => a + b.quantity, 0) || 0}
                     </td>
-                    <td className="py-3 px-4 text-right font-mono font-bold text-emerald-400">
+                    <td className="py-3 px-4 text-center font-mono font-bold text-emerald-400">
                       {formatCurrency(sale.total, settings.currency)}
                     </td>
                     {activeRole === 'admin' && (
-                      <td className="py-3 px-4 text-right font-mono font-semibold text-emerald-300">
+                      <td className="py-3 px-4 text-center font-mono font-semibold text-emerald-300">
                         {formatCurrency(sale.grossProfit, settings.currency)}
                       </td>
                     )}
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3 px-4 text-center">
                       <button
                         onClick={() => handleReprintReceipt(sale)}
                         className="btn btn-secondary btn-xs inline-flex items-center gap-1"
@@ -522,6 +523,7 @@ export default function SalesReport() {
             </tbody>
           </table>
         </div>
+
       </div>
     </div>
   );

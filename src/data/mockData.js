@@ -10,7 +10,10 @@ export const initialSettings = {
   receiptGreeting: 'Thank you for shopping at TANK! Please keep this receipt for returns or exchanges.',
   printerWidth: '80mm', // '80mm' or '58mm'
   autoPrintReceipt: true,
+  theme: 'light', // 'light' | 'dark'
 };
+
+
 
 export const initialSubscription = {
   plan: 'free', // 'free' | 'premium'
