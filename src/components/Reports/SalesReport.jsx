@@ -127,6 +127,7 @@ export default function SalesReport() {
       .slice(0, 5);
 
     const profitMargin = totalRevenue > 0 ? Math.round((totalGrossProfit / totalRevenue) * 100) : 0;
+    const avgOrderValue = txCount > 0 ? totalRevenue / txCount : 0;
 
     return {
       totalRevenue,
@@ -136,10 +137,12 @@ export default function SalesReport() {
       totalDiscounts,
       txCount,
       unitsSold,
+      avgOrderValue,
       paymentBreakdown,
       cashierPerformance,
       topSellingProducts,
     };
+
   }, [filteredSales]);
 
   const handleReprintReceipt = (sale) => {

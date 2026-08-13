@@ -16,7 +16,8 @@ function MainAppContent() {
   const { activeTab, activeRole } = useStore();
 
   return (
-    <div className="app-layout min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white">
+    <div className="app-layout min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white">
+
       {/* Header Bar */}
       <Header />
 

@@ -8,20 +8,32 @@ const StoreContext = createContext(null);
 export function StoreProvider({ children }) {
   // 1. Settings State
   const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem('tank_settings');
-    return saved ? JSON.parse(saved) : initialSettings;
+    try {
+      const saved = localStorage.getItem('tank_settings');
+      return saved ? { ...initialSettings, ...JSON.parse(saved) } : initialSettings;
+    } catch (e) {
+      return initialSettings;
+    }
   });
 
   // 2. Subscription State
   const [subscription, setSubscription] = useState(() => {
-    const saved = localStorage.getItem('tank_subscription');
-    return saved ? JSON.parse(saved) : initialSubscription;
+    try {
+      const saved = localStorage.getItem('tank_subscription');
+      return saved ? { ...initialSubscription, ...JSON.parse(saved) } : initialSubscription;
+    } catch (e) {
+      return initialSubscription;
+    }
   });
 
   // 3. Cashiers State
   const [cashiers, setCashiers] = useState(() => {
-    const saved = localStorage.getItem('tank_cashiers');
-    return saved ? JSON.parse(saved) : initialCashiers;
+    try {
+      const saved = localStorage.getItem('tank_cashiers');
+      return saved ? JSON.parse(saved) : initialCashiers;
+    } catch (e) {
+      return initialCashiers;
+    }
   });
 
   // 4. Role & Current User State: 'admin' | 'cashier'
@@ -37,7 +49,8 @@ export function StoreProvider({ children }) {
 
   // Active cashier object
   const activeCashier = useMemo(() => {
-    return cashiers.find(c => c.id === activeCashierId) || cashiers[0] || {
+    const found = Array.isArray(cashiers) ? cashiers.find(c => c.id === activeCashierId) : null;
+    return found || cashiers[0] || {
       id: 'csh_default',
       cashierCode: 'CSH-101',
       name: 'Default Cashier',
@@ -47,15 +60,24 @@ export function StoreProvider({ children }) {
 
   // 5. Products State
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('tank_products');
-    return saved ? JSON.parse(saved) : initialProducts;
+    try {
+      const saved = localStorage.getItem('tank_products');
+      return saved ? JSON.parse(saved) : initialProducts;
+    } catch (e) {
+      return initialProducts;
+    }
   });
 
   // 6. Sales History State
   const [sales, setSales] = useState(() => {
-    const saved = localStorage.getItem('tank_sales');
-    return saved ? JSON.parse(saved) : initialSales;
+    try {
+      const saved = localStorage.getItem('tank_sales');
+      return saved ? JSON.parse(saved) : initialSales;
+    } catch (e) {
+      return initialSales;
+    }
   });
+
 
   // 7. Navigation Tab State
   const [activeTab, setActiveTab] = useState('pos'); // 'pos' | 'products' | 'reports' | 'cashiers' | 'settings' | 'subscription'
